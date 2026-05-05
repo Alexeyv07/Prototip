@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="viewport-fit=cover, width=device-width, maximum-scale=1, user-scalable=0, initial-scale=1">
+    <title>Заказы | Личный кабинет Технопарк</title>
+    <style>
+        /* Базовые стили взяты из десктопной версии для сохранения стилистики */
+        body {
+            background: #13181e;
+            color: #fff;
+            font-family: DINPro Technopark, Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden;
+        }
+        .tp-box--black-tp {
+            background-color: rgba(0, 0, 0, .3);
+        }
+        .tp-box--white-tp {
+            background-color: hsla(0, 0%, 100%, .1);
+        }
+        .tp-box--p-medium {
+            padding: 18px;
+        }
+        .tp-box--br-large-mobile {
+            border-radius: 8px;
+        }
+        .personal-order {
+            font-size: 16px;
+            padding: 0;
+            margin-bottom: 18px;
+        }
+        .personal-order__header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            box-sizing: border-box;
+            padding: 18px;
+            border-radius: 8px 8px 0 0;
+            margin-bottom: 0;
+            background-color: hsla(0, 0%, 100%, .1);
+        }
+        .personal-order-mini-info {
+            align-items: center;
+            display: flex;
+            font-size: 14px;
+            justify-content: space-between;
+            width: 100%;
+        }
+        .personal-order-mini-info__number-date {
+            display: flex;
+            flex-direction: column;
+            text-align: right;
+            gap: 4px;
+        }
+        .personal-order-mini-info__date {
+            color: #bababa;
+        }
+        .personal-order__info {
+            padding: 18px;
+            position: relative;
+            border-bottom: 1px solid #303030;
+        }
+        .personal-order__products {
+            border-bottom: 1px solid #303030;
+            margin-bottom: 18px;
+            padding-bottom: 18px;
+        }
+        .personal-product-media {
+            display: grid;
+            grid-template-columns: 78px 1fr;
+            grid-template-areas: "image name";
+            grid-gap: 18px;
+            color: inherit;
+            cursor: pointer;
+            font-size: 16px;
+            text-decoration: none;
+        }
+        .personal-product-media__image {
+            align-self: start;
+            background-color: #fff;
+            border-radius: 3px;
+            overflow: hidden;
+            padding: 6px;
+            width: 66px;
+            height: 66px;
+        }
+        .personal-product-media__img {
+            display: block;
+            height: auto;
+            max-width: 100%;
+            object-fit: contain;
+        }
+        .personal-product-media__name {
+            align-self: center;
+            color: #bababa;
+            word-break: break-word;
+        }
+        .personal-order__row {
+            display: flex;
+            margin-bottom: 12px;
+            font-size: 16px;
+        }
+        .personal-order__key {
+            color: #bababa;
+            margin-right: 12px;
+        }
+        .personal-order__value {
+            color: #f5f5f5;
+            text-align: right;
+        }
+        .personal-order__shop-type {
+            margin-left: 9px;
+        }
+        .personal-order__footer {
+            padding: 18px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .personal-order__details-link {
+            align-items: center;
+            color: #bababa;
+            display: flex;
+            justify-content: flex-end;
+            gap: 6px;
+            text-decoration: none;
+            margin-left: auto;
+        }
+        .listing-show-more {
+            display: flex;
+            justify-content: center;
+            width: 100%;
+            margin-top: 24px;
+            gap: 6px;
+        }
+        .header-mobile-new {
+            background-color: #13181e;
+            padding: 10px 12px;
+            display: flex;
+            align-items: center;
+            height: 50px;
+            border-bottom-left-radius: 24px;
+            border-bottom-right-radius: 24px;
+        }
+        .app-tab-bar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background-color: rgba(13, 17, 21, .9);
+            backdrop-filter: blur(10px);
+            border-radius: 24px 24px 0 0;
+            padding: 8px 16px 16px;
+            display: flex;
+            justify-content: space-around;
+        }
+        .footer-links-block {
+            margin-bottom: 18px;
+        }
+        .footer-link {
+            display: block;
+            padding: 12px 0;
+            color: #8b96a3;
+            text-decoration: none;
+            border-bottom: 1px solid #262e37;
+        }
+        .footer-link:last-child {
+            border-bottom: none;
+        }
+        .footer-title {
+            font-size: 16px;
+            font-weight: 500;
+            margin-bottom: 12px;
+            display: flex;
+            justify-content: space-between;
+        }
+        .tp-status {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .tp-status__dot {
+            width: 24px;
+            height: 24px;
+        }
+        .tp-status--danger .tp-status__dot {
+            color: #00bd0a;
+        }
+        .mb-18 { margin-bottom: 18px; }
+        .text-blue { color: #0093c4; }
+        .flex-grow-1 { flex-grow: 1; }
+        .text-truncate { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    </style>
+</head>
+<body>
+    <header class="header-mobile-new">
+        <div style="display: flex; align-items: center; gap: 12px; flex-grow: 1; background: #eceff2; border-radius: 24px; padding: 0 12px; height: 36px;">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="color: #878787;">
+                <path d="M11.5833 19.5C15.9555 19.5 19.5 15.9556 19.5 11.5833C19.5 7.21108 15.9555 3.66666 11.5833 3.66666C7.21104 3.66666 3.66663 7.21108 3.66663 11.5833C3.66663 15.9556 7.21104 19.5 11.5833 19.5Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+                <path d="M20.5001 20.5L19 18.9997" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+            </svg>
+            <span style="color: #8b96a3;">Попробуйте Иннова</span>
+        </div>
+        <div style="margin-left: 12px; background: #1d242d; border-radius: 36px; padding: 8px;">
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M4.12012 12.5626V7.43997C4.12012 4.25218 6.70433 1.66797 9.89212 1.66797H10.325C13.5128 1.66797 16.097 4.25218 16.097 7.43997V12.5626C16.097 15.7504 13.5128 18.3346 10.325 18.3346" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"></path>
+                <path d="M4.12009 7.58203H3.10999C2.31305 7.58203 1.66699 8.22808 1.66699 9.02503V11.1174C1.66699 11.9143 2.31305 12.5604 3.10999 12.5604H4.12009" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"></path>
+                <path d="M16.0967 7.58203H17.1068C17.9038 7.58203 18.5498 8.22808 18.5498 9.02503V11.1174C18.5498 11.9143 17.9038 12.5604 17.1068 12.5604H16.0967" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"></path>
+                <path d="M7.43848 12.6328C7.43848 12.6328 8.34035 13.3543 10.084 13.3543C11.8276 13.3543 12.7295 12.6328 12.7295 12.6328" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"></path>
+            </svg>
+        </div>
+    </header>
+
+    <div style="padding: 24px 18px 100px;">
+        <div style="display: flex; align-items: center; margin-bottom: 24px; background: rgba(0,0,0,0.3); padding: 18px; border-radius: 8px;">
+            <svg width="24" height="24" fill="none" xmlns="http://www.w3.org/2000/svg" style="margin-right: 12px;">
+                <path d="M9.5 22h6c4.02 0 4.74-1.61 4.95-3.57l.75-6C21.47 9.99 20.77 8 16.5 8h-8c-4.27 0-4.97 1.99-4.7 4.43l.75 6C4.76 20.39 5.48 22 9.5 22zM8 7.67V6.7c0-2.25 1.81-4.46 4.06-4.67A4.5 4.5 0 0 1 17 6.51v1.38" stroke="currentColor" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"></path>
+            </svg>
+            <div class="flex-grow-1 text-truncate" style="margin-right: 12px; font-size: 20px; font-weight: 500;">Заказы</div>
+        </div>
+
+        <div style="font-size: 18px; margin-bottom: 24px; color: #fff;">История заказов</div>
+
+        <!-- Заказ 1 -->
+        <div class="personal-order tp-box tp-box--black-tp tp-box--br-large-mobile">
+            <div class="personal-order__header">
+                <div class="personal-order-mini-info">
+                    <div class="personal-order-status">
+                        <div class="tp-status tp-status--danger">
+                            <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg" class="tp-status__dot">
+                                <circle opacity="0.5" cx="9" cy="9" r="8.75" transform="rotate(90 9 9)" stroke="#00bd0a" stroke-width="0.5"></circle>
+                                <circle cx="9" cy="9" r="4.5" transform="rotate(90 9 9)" fill="#00bd0a"></circle>
+                            </svg>
+                            <span>Выполнен</span>
+                        </div>
+                    </div>
+                    <div class="personal-order-mini-info__number-date">
+                        <span>№347-097-201</span>
+                        <span class="personal-order-mini-info__date">от 19.04.2026</span>
+                    </div>
+                </div>
+            </div>
+            <div class="personal-order__info">
+                <div class="personal-order__products">
+                    <a href="https://www.technopark.ru/noutbuk-apple-macbook-air-153-m4-256-gb-2025-goluboy-798001/" class="personal-product-media">
+                        <div class="personal-product-media__image">
+                            <img src="https://cdn1.technopark.ru/technopark/photos_resized/product/248_248/798001/1_798001.jpeg?timestamp=2025-07-28_16-01-54" alt="Ноутбук" class="personal-product-media__img">
+                        </div>
+                        <div class="personal-product-media__name">Ноутбук Apple MacBook Air 15.3 М4 256 ГБ 2025 голубой MC7A4</div>
+                    </a>
+                </div>
+                <div>
+                    <div class="personal-order__row mb-18">
+                        <div class="personal-order__value">
+                            <div style="display: flex; align-items: center;">
+                                <svg width="20px" height="20px" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path fill-rule="evenodd" clip-rule="evenodd" d="M22.0221 16.5436C22.0221 16.827 21.7827 17.0648 21.5001 17.0648H7.98196C7.84422 17.063 7.71261 17.0075 7.61512 16.9102C7.51764 16.8128 7.46198 16.6813 7.45998 16.5436V6.98118C7.45998 6.69703 7.70013 6.45766 7.98196 6.45766H21.5001C21.7827 6.45766 22.0221 6.69703 22.0221 6.98118V16.5436ZM20.9789 2H8.50239C5.47013 2 3.00154 4.46858 3.00154 7.50239V16.0231C3.00154 19.0554 5.47013 21.5224 8.50239 21.5224H20.9789C24.0135 21.5224 26.4797 19.0554 26.4797 16.0231V7.50239C26.4797 4.46858 24.0135 2 20.9789 2V2ZM26.4079 28.6618V25.0489C26.4079 24.9589 26.3722 24.8726 26.3087 24.8089C26.2451 24.7452 26.1589 24.7093 26.069 24.7091H3.33975C3.24971 24.7093 3.16341 24.7452 3.09974 24.8089C3.03606 24.8725 3.0002 24.9588 3 25.0489V28.6618C3.00041 28.7516 3.03638 28.8377 3.10005 28.901C3.16373 28.9644 3.24991 29 3.33975 29H26.069C26.1587 28.9998 26.2446 28.9641 26.3081 28.9008C26.3716 28.8374 26.4075 28.7515 26.4079 28.6618" fill="currentColor"></path>
+                                </svg>
+                                <span style="margin-left: 9px;">Покупка онлайн</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="personal-order__row">
+                        <span class="personal-order__key">Самовывоз:</span>
+                        <span class="personal-order__value">ТРК «Европолис»</span>
+                    </div>
+                    <div class="personal-order__row">
+                        <span class="personal-order__key">Количество товаров:</span>
+                        <span class="personal-order__value">1 шт</span>
+                    </div>
+                </div>
+            </div>
+            <div class="personal-order__footer">
+                <a href="return1.html" style="display:inline-flex;align-items:center;gap:6px;color:#ea4e01;font-size:14px;font-weight:500;text-decoration:none;">
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M8 1.33331C4.32 1.33331 1.33333 4.31998 1.33333 7.99998C1.33333 11.68 4.32 14.6666 8 14.6666C11.68 14.6666 14.6667 11.68 14.6667 7.99998C14.6667 4.31998 11.68 1.33331 8 1.33331ZM8.66667 11.3333H7.33333V9.99998H8.66667V11.3333ZM8.66667 8.66665H7.33333V4.66665H8.66667V8.66665Z" fill="currentColor"/>
+                    </svg>
+                    Обнаружили брак?
+                </a>
+                <a href="https://www.technopark.ru/personal/orders/347097226" class="personal-order__details-link">
+                    Подробнее
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M9 7L14.3333 12.3333L9 17.6667" stroke="currentColor"></path>
+                    </svg>
+                </a>
+            </div>
+        </div>
+
+        <!-- Заказ 2 -->
+        <div class="personal-order tp-box tp-box--black-tp tp-box--br-large-mobile">
+            <div class="personal-order__header">
+                <div class="personal-order-mini-info">
+                    <div class="personal-order-status">
+                        <div class="tp-status tp-status--danger">
+                            <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg" class="tp-status__dot">
+                                <circle opacity="0.5" cx="9" cy="9" r="8.75" transform="rotate(90 9 9)" stroke="#00bd0a" stroke-width="0.5"></circle>
+                                <circle cx="9" cy="9" r="4.5" transform="rotate(90 9 9)" fill="#00bd0a"></circle>
+                            </svg>
+                            <span>Выполнен</span>
+                        </div>
+                    </div>
+                    <div class="personal-order-mini-info__number-date">
+                        <span>№347-097-226</span>
+                        <span class="personal-order-mini-info__date">от 21.04.2026</span>
+                    </div>
+                </div>
+            </div>
+            <div class="personal-order__info">
+                <div class="personal-order__products">
+                    <a href="https://www.technopark.ru/smartfon-samsung-galaxy-s26-ultra-256-gb-fioletovyy-821541/" class="personal-product-media">
+                        <div class="personal-product-media__image">
+                            <img src="https://cdn1.technopark.ru/technopark/photos_resized/product/248_248/821541/1_821541.jpg?timestamp=2026-02-19_12-35-11" alt="Смартфон" class="personal-product-media__img">
+                        </div>
+                        <div class="personal-product-media__name">Смартфон Samsung Galaxy S26 Ultra 256 ГБ фиолетовый</div>
+                    </a>
+                </div>
+                <div>
+                    <div class="personal-order__row mb-18">
+                        <div class="personal-order__value">
+                            <div style="display: flex; align-items: center;">
+                                <svg width="20px" height="20px" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path fill-rule="evenodd" clip-rule="evenodd" d="M22.0221 16.5436C22.0221 16.827 21.7827 17.0648 21.5001 17.0648H7.98196C7.84422 17.063 7.71261 17.0075 7.61512 16.9102C7.51764 16.8128 7.46198 16.6813 7.45998 16.5436V6.98118C7.45998 6.69703 7.70013 6.45766 7.98196 6.45766H21.5001C21.7827 6.45766 22.0221 6.69703 22.0221 6.98118V16.5436ZM20.9789 2H8.50239C5.47013 2 3.00154 4.46858 3.00154 7.50239V16.0231C3.00154 19.0554 5.47013 21.5224 8.50239 21.5224H20.9789C24.0135 21.5224 26.4797 19.0554 26.4797 16.0231V7.50239C26.4797 4.46858 24.0135 2 20.9789 2V2ZM26.4079 28.6618V25.0489C26.4079 24.9589 26.3722 24.8726 26.3087 24.8089C26.2451 24.7452 26.1589 24.7093 26.069 24.7091H3.33975C3.24971 24.7093 3.16341 24.7452 3.09974 24.8089C3.03606 24.8725 3.0002 24.9588 3 25.0489V28.6618C3.00041 28.7516 3.03638 28.8377 3.10005 28.901C3.16373 28.9644 3.24991 29 3.33975 29H26.069C26.1587 28.9998 26.2446 28.9641 26.3081 28.9008C26.3716 28.8374 26.4075 28.7515 26.4079 28.6618" fill="currentColor"></path>
+                                </svg>
+                                <span style="margin-left: 9px;">Покупка онлайн</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="personal-order__row">
+                        <span class="personal-order__key">Самовывоз:</span>
+                        <span class="personal-order__value">ТРК «Европолис»</span>
+                    </div>
+                    <div class="personal-order__row">
+                        <span class="personal-order__key">Количество товаров:</span>
+                        <span class="personal-order__value">1 шт</span>
+                    </div>
+                </div>
+            </div>
+            <div class="personal-order__footer">
+                <a href="return2.html" style="display:inline-flex;align-items:center;gap:6px;color:#ea4e01;font-size:14px;font-weight:500;text-decoration:none;">
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M8 1.33331C4.32 1.33331 1.33333 4.31998 1.33333 7.99998C1.33333 11.68 4.32 14.6666 8 14.6666C11.68 14.6666 14.6667 11.68 14.6667 7.99998C14.6667 4.31998 11.68 1.33331 8 1.33331ZM8.66667 11.3333H7.33333V9.99998H8.66667V11.3333ZM8.66667 8.66665H7.33333V4.66665H8.66667V8.66665Z" fill="currentColor"/>
+                    </svg>
+                    Обнаружили брак?
+                </a>
+                <a href="https://www.technopark.ru/personal/orders/347097226" class="personal-order__details-link">
+                    Подробнее
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M9 7L14.3333 12.3333L9 17.6667" stroke="currentColor"></path>
+                    </svg>
+                </a>
+            </div>
+        </div>
+
+        <div class="listing-show-more">
+            <button disabled style="flex-grow:1; background: transparent; border: 1px solid #0093c4; color: #0093c4; padding: 12px; border-radius: 25px; font-size: 14px; opacity: 0.5;">Показать больше</button>
+            <button style="background: transparent; border: 1px solid #0093c4; color: #0093c4; padding: 12px; border-radius: 25px; width: 50px;">
+                <svg width="20" height="20" viewBox="0 0 20 21" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M4.52637 11.8739L8.79303 7.60723C9.4347 6.96556 10.4847 6.96556 11.1264 7.60723L15.393 11.8739" stroke="currentColor" stroke-width="1.4" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"></path>
+                </svg>
+            </button>
+        </div>
+    </div>
+
+    <nav class="app-tab-bar">
+        <a href="https://www.technopark.ru/" style="color: #8b96a3; text-decoration: none; display: flex; flex-direction: column; align-items: center; gap: 4px; font-size: 12px;">
+            <svg width="25" height="24" viewBox="0 0 25 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M3.875 10.2437C3.875 9.20571 4.3763 8.23641 5.2109 7.66064L11.2109 3.52139C12.2186 2.8262 13.5314 2.8262 14.5391 3.52139L20.5391 7.66064C21.3737 8.23641 21.875 9.20571 21.875 10.2437V17.8956C21.875 19.6101 20.5319 21 18.875 21H18.375C16.9943 21 15.875 19.8417 15.875 18.413C15.875 16.9842 14.7557 15.8259 13.375 15.8259H12.375C10.9943 15.8259 9.875 16.9842 9.875 18.413C9.875 19.8417 8.75571 21 7.375 21H6.875C5.21815 21 3.875 19.6101 3.875 17.8956V10.2437Z" fill="currentColor"></path>
+            </svg>
+            Главная
+        </a>
+        <a href="https://www.technopark.ru/catalog/" style="color: #8b96a3; text-decoration: none; display: flex; flex-direction: column; align-items: center; gap: 4px; font-size: 12px;">
+            <svg width="25" height="24" viewBox="0 0 25 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M2.625 4.21787C2.625 3.54526 3.17109 3 3.84474 3H20.4331C21.1068 3 21.6529 3.54526 21.6529 4.21787C21.6529 4.89048 21.1068 5.43574 20.4331 5.43574H3.84474C3.17109 5.43574 2.625 4.89048 2.625 4.21787Z" fill="currentColor"></path>
+                <path d="M3.84474 8.84577C3.17109 8.84577 2.625 9.39103 2.625 10.0636C2.625 10.7362 3.17109 11.2815 3.84474 11.2815H6.58813C6.8481 10.3809 7.26688 9.56217 7.81348 8.84577H3.84474Z" fill="currentColor"></path>
+                <path d="M6.37326 14.6915C6.50055 15.5539 6.76095 16.3729 7.13296 17.1273H3.84474C3.17109 17.1273 2.625 16.582 2.625 15.9094C2.625 15.2368 3.17109 14.6915 3.84474 14.6915H6.37326Z" fill="currentColor"></path>
+                <path fill-rule="evenodd" clip-rule="evenodd" d="M15.0663 9.58696C12.7759 9.58696 10.9192 11.4408 10.9192 13.7277C10.9192 16.0146 12.7759 17.8685 15.0663 17.8685C17.3567 17.8685 19.2134 16.0146 19.2134 13.7277C19.2134 11.4408 17.3567 9.58696 15.0663 9.58696ZM8.47973 13.7277C8.47973 10.0956 11.4286 7.15122 15.0663 7.15122C18.704 7.15122 21.6529 10.0956 21.6529 13.7277C21.6529 15.2897 21.1075 16.7246 20.1964 17.8527L20.1979 17.8541L22.2678 19.921C22.7441 20.3966 22.7441 21.1677 22.2677 21.6433C21.7914 22.1189 21.0191 22.1189 20.5428 21.6433L18.4729 19.5764C18.4269 19.5305 18.3853 19.4818 18.3482 19.4309C17.382 19.9864 16.2613 20.3042 15.0663 20.3042C11.4286 20.3042 8.47973 17.3598 8.47973 13.7277Z" fill="currentColor"></path>
+            </svg>
+            Каталог
+        </a>
+        <a href="https://www.technopark.ru/cart/" style="color: #8b96a3; text-decoration: none; display: flex; flex-direction: column; align-items: center; gap: 4px; font-size: 12px;">
+            <svg width="25" height="24" viewBox="0 0 25 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path fill-rule="evenodd" clip-rule="evenodd" d="M7.73524 7.06C7.83164 7.06 7.90979 6.98185 7.90979 6.88545C7.90979 4.43224 9.94022 2.5 12.375 2.5C14.8099 2.5 16.8403 4.43224 16.8403 6.88545C16.8403 6.98185 16.9184 7.06 17.0148 7.06H17.4263C18.8398 7.06 20.035 8.12852 20.2217 9.55937L21.3498 18.2394C21.5752 19.9658 20.26 21.5 18.5544 21.5H6.19564C4.49001 21.5 3.17478 19.9658 3.40021 18.2394L4.52828 9.55937C4.71504 8.12852 5.91019 7.06 7.32365 7.06H7.73524ZM9.31987 6.88545C9.31987 5.28992 10.6564 3.94 12.375 3.94C14.0936 3.94 15.4302 5.28992 15.4302 6.88545C15.4302 6.98185 15.3521 7.06 15.2557 7.06H9.49441C9.39801 7.06 9.31987 6.98185 9.31987 6.88545ZM16.875 12.75C16.875 13.1642 16.5392 13.5 16.125 13.5C15.7108 13.5 15.375 13.1642 15.375 12.75C15.375 12.3358 15.7108 12 16.125 12C16.5392 12 16.875 12.3358 16.875 12.75ZM8.625 13.5C9.03921 13.5 9.375 13.1642 9.375 12.75C9.375 12.3358 9.03921 12 8.625 12C8.21079 12 7.875 12.3358 7.875 12.75C7.875 13.1642 8.21079 13.5 8.625 13.5Z" fill="currentColor"></path>
+            </svg>
+            Корзина
+        </a>
+        <a href="https://www.technopark.ru/personal/" style="color: #8b96a3; text-decoration: none; display: flex; flex-direction: column; align-items: center; gap: 4px; font-size: 12px;">
+            <svg width="25" height="24" viewBox="0 0 25 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M17.1252 7C17.1252 9.76142 14.8866 12 12.1252 12C9.36375 12 7.12518 9.76142 7.12518 7C7.12518 4.23858 9.36375 2 12.1252 2C14.8866 2 17.1252 4.23858 17.1252 7Z" fill="currentColor"></path>
+                <path d="M12.1252 14C7.45162 14 3.52688 16.5648 2.43032 20.031C2.09716 21.0842 3.02061 22 4.12518 22H20.1252C21.2297 22 22.1532 21.0842 21.82 20.031C20.7235 16.5648 16.7987 14 12.1252 14Z" fill="currentColor"></path>
+            </svg>
+            Профиль
+        </a>
+    </nav>
+</body>
+</html>
