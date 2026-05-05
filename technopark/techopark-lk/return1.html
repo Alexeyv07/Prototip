@@ -1,0 +1,614 @@
+<!DOCTYPE html>
+<html lang="ru" style="background: #13181e;">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, nofollow">
+    <title>Возврат бракованного товара | Технопарк</title>
+    <style>
+        /* Подключение шрифтов */
+        @font-face {
+            font-family: 'DINPro Technopark';
+            font-style: normal;
+            font-weight: 400;
+            src: url(data:font/woff2;base64,d09GMgABAAAAACN8AA8AAAAATYAAACMe...) format('woff2');
+        }
+        @font-face {
+            font-family: 'DINPro Technopark';
+            font-style: normal;
+            font-weight: 500;
+            src: url(data:font/woff2;base64,d09GMgABAAAAACR0AA8AAAAATfwAACQV...) format('woff2');
+        }
+
+        /* Основные переменные как на сайте */
+        :root {
+            --tpui-color-primary: #0093c4;
+            --tpui-color-primary-light: #31b7e3;
+            --tpui-color-accent: #ea4e01;
+            --tpui-color-accent-light: #ff7835;
+            --tpui-color-critical: #c22e2e;
+            --tpui-color-positive: #00bd0a;
+            --tpui-color-warning: #ff9700;
+            --tpui-color-muted: #878787;
+            --tpui-text-color-default: #fff;
+            --tpui-text-color-inverse: #13181e;
+            --tpui-text-color-secondary: #878787;
+            --tpui-background-color-default: rgba(0,0,0,.3);
+            --tpui-background-color-default-tertiary: hsla(0,0%,100%,.1);
+            --tpui-border-radius-small: 3px;
+            --tpui-border-radius-medium: 8px;
+            --tpui-border-radius-large: 16px;
+            --tpui-space-xxxlarge: 42px;
+            --tpui-space-xxlarge: 36px;
+            --tpui-space-xlarge: 30px;
+            --tpui-space-large: 24px;
+            --tpui-space-medium: 18px;
+            --tpui-space-small: 12px;
+            --tpui-space-xsmall: 6px;
+            --tpui-space-none: 0px;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            background: #13181e;
+            color: var(--tpui-text-color-default);
+            font-family: 'DINPro Technopark', 'Arial', sans-serif;
+            font-size: 16px;
+            line-height: 21px;
+            min-height: 100vh;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .page-container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 36px 24px;
+        }
+
+        /* Хедер страницы */
+        .return-header {
+            margin-bottom: var(--tpui-space-large);
+        }
+        .return-header__back {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: #8b96a3;
+            font-size: 14px;
+            cursor: pointer;
+            transition: color .2s;
+            margin-bottom: var(--tpui-space-large);
+        }
+        .return-header__back:hover { color: #fff; }
+        .return-header__title {
+            font-size: 24px;
+            font-weight: 500;
+            line-height: 30px;
+            color: #fff;
+        }
+
+        /* Карточка товара (как tp-box) */
+        .tp-box {
+            background: var(--tpui-background-color-default);
+            border-radius: var(--tpui-border-radius-medium);
+            padding: var(--tpui-space-medium);
+            margin-bottom: var(--tpui-space-medium);
+        }
+        .tp-box--white {
+            background: var(--tpui-background-color-inverse);
+            color: var(--tpui-text-color-inverse);
+        }
+        .product-card {
+            display: flex;
+            gap: 18px;
+            align-items: center;
+        }
+        .product-card__image {
+            width: 80px;
+            height: 80px;
+            background: #fff;
+            border-radius: var(--tpui-border-radius-small);
+            padding: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .product-card__image img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+        }
+        .product-card__info { flex: 1; }
+        .product-card__name {
+            font-size: 18px;
+            font-weight: 500;
+            margin-bottom: 8px;
+        }
+        .product-card__price {
+            color: var(--tpui-text-color-secondary);
+            font-size: 14px;
+        }
+        .product-card__bonus {
+            background: linear-gradient(90deg, #0093c4, #31b7e3);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-weight: 500;
+            margin-top: 4px;
+        }
+
+        /* Поля ввода в стиле Технопарка */
+        .tp-input-new {
+            display: flex;
+            flex-direction: column;
+            margin-bottom: var(--tpui-space-medium);
+        }
+        .tp-input-new__label {
+            font-size: 14px;
+            color: #8b96a3;
+            margin-bottom: 6px;
+        }
+        .tp-input-new__box {
+            background: #191e24;
+            border: 1px solid #353e48;
+            border-radius: var(--tpui-border-radius-medium);
+            height: 50px;
+            display: flex;
+            align-items: center;
+            padding: 0 12px;
+            transition: border-color .2s;
+            overflow: hidden;
+        }
+        .tp-input-new__box:focus-within {
+            border-color: var(--tpui-color-primary);
+        }
+        .tp-input-new__input {
+            background: transparent;
+            border: none;
+            color: #fff;
+            font-size: 16px;
+            font-family: inherit;
+            width: 100%;
+            outline: none;
+        }
+        .tp-textarea__input {
+            background: #191e24;
+            border: 1px solid #353e48;
+            border-radius: var(--tpui-border-radius-medium);
+            min-height: 120px;
+            padding: 12px;
+            color: #fff;
+            font-size: 16px;
+            font-family: inherit;
+            width: 100%;
+            resize: vertical;
+            outline: none;
+            transition: border-color .2s;
+        }
+        .tp-textarea__input:focus {
+            border-color: var(--tpui-color-primary);
+        }
+
+        /* Кнопки */
+        .tp-button-new {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-family: inherit;
+            font-size: 16px;
+            font-weight: 500;
+            height: 50px;
+            padding: 0 24px;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all .2s;
+            border: 1px solid transparent;
+            background: transparent;
+        }
+        .tp-button-new--primary {
+            background: var(--tpui-color-primary);
+            color: #fff;
+        }
+        .tp-button-new--primary:hover {
+            background: #006283;
+        }
+        .tp-button-new--primary-outlined {
+            border-color: var(--tpui-color-primary);
+            color: var(--tpui-color-primary);
+        }
+        .tp-button-new--primary-outlined:hover {
+            background: var(--tpui-color-primary);
+            color: #fff;
+        }
+        .tp-button-new--accent {
+            background: var(--tpui-color-accent);
+            color: #fff;
+        }
+        .tp-button-new--accent:hover {
+            background: #ff9700;
+        }
+        .tp-button-new--block {
+            width: 100%;
+        }
+
+        /* Радио-кнопки */
+        .tp-radio-group {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        .tp-radio {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            cursor: pointer;
+            padding: 12px;
+            background: var(--tpui-background-color-default);
+            border-radius: var(--tpui-border-radius-medium);
+            transition: background .2s;
+        }
+        .tp-radio:hover {
+            background: var(--tpui-background-color-default-tertiary);
+        }
+        .tp-radio__control {
+            width: 20px;
+            height: 20px;
+            border: 1px solid #8b96a3;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            transition: all .2s;
+        }
+        .tp-radio input:checked + .tp-radio__control {
+            background: var(--tpui-color-primary);
+            border-color: var(--tpui-color-primary);
+        }
+        .tp-radio__dot {
+            width: 8px;
+            height: 8px;
+            background: #fff;
+            border-radius: 50%;
+            opacity: 0;
+            transition: opacity .2s;
+        }
+        .tp-radio input:checked + .tp-radio__control .tp-radio__dot {
+            opacity: 1;
+        }
+        .tp-radio input {
+            position: absolute;
+            opacity: 0;
+            cursor: pointer;
+        }
+        .tp-radio__label {
+            color: #fff;
+            font-size: 16px;
+        }
+        .tp-radio__extra {
+            color: #8b96a3;
+            font-size: 14px;
+            margin-left: auto;
+        }
+        .delivery-address {
+            display: none;
+            margin-top: 12px;
+        }
+        .delivery-address.active {
+            display: block;
+        }
+
+        /* Загрузка фото */
+        .photo-upload {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+        .photo-upload__item {
+            width: 100px;
+            height: 100px;
+            background: #191e24;
+            border: 1px dashed #353e48;
+            border-radius: var(--tpui-border-radius-medium);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            transition: border-color .2s;
+        }
+        .photo-upload__item:hover {
+            border-color: var(--tpui-color-primary);
+        }
+        .photo-upload__item img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            border-radius: var(--tpui-border-radius-medium);
+        }
+        .photo-upload__item .delete-btn {
+            position: absolute;
+            top: 4px;
+            right: 4px;
+            width: 20px;
+            height: 20px;
+            background: rgba(0,0,0,.6);
+            border: none;
+            border-radius: 50%;
+            color: #fff;
+            cursor: pointer;
+            font-size: 12px;
+            display: none;
+            align-items: center;
+            justify-content: center;
+        }
+        .photo-upload__item.has-image .delete-btn {
+            display: flex;
+        }
+        .photo-upload__plus {
+            font-size: 32px;
+            color: #8b96a3;
+        }
+
+        /* Футер с информацией о бонусах */
+        .bonus-info {
+            background: linear-gradient(90deg, rgba(0,147,196,.15), rgba(49,183,227,.15));
+            border-radius: var(--tpui-border-radius-medium);
+            padding: var(--tpui-space-medium);
+            margin-bottom: var(--tpui-space-medium);
+            border: 1px solid rgba(0,147,196,.3);
+        }
+        .bonus-info__amount {
+            font-size: 28px;
+            font-weight: 500;
+            margin: 8px 0;
+        }
+        .bonus-info__amount span {
+            color: var(--tpui-color-primary-light);
+        }
+
+        /* Чекбокс согласия */
+        .tp-checkbox {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            margin-bottom: var(--tpui-space-large);
+            cursor: pointer;
+            font-size: 14px;
+            color: #8b96a3;
+        }
+        .tp-checkbox__box {
+            width: 20px;
+            height: 20px;
+            border: 1px solid #8b96a3;
+            border-radius: 4px;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all .2s;
+        }
+        .tp-checkbox input:checked + .tp-checkbox__box {
+            background: var(--tpui-color-primary);
+            border-color: var(--tpui-color-primary);
+        }
+        .tp-checkbox__check {
+            color: #fff;
+            font-size: 12px;
+            opacity: 0;
+            transition: opacity .2s;
+        }
+        .tp-checkbox input:checked + .tp-checkbox__box .tp-checkbox__check {
+            opacity: 1;
+        }
+        .tp-checkbox input {
+            position: absolute;
+            opacity: 0;
+            cursor: pointer;
+        }
+
+        /* Стили для select в стиле Технопарка */
+        .tp-select-new {
+            position: relative;
+        }
+        .tp-select-new select {
+            appearance: none;
+            background: #191e24;
+            border: 1px solid #353e48;
+            border-radius: var(--tpui-border-radius-medium);
+            color: #fff;
+            font-size: 16px;
+            font-family: inherit;
+            padding: 0 12px;
+            height: 50px;
+            width: 100%;
+            cursor: pointer;
+            outline: none;
+            transition: border-color .2s;
+        }
+        .tp-select-new select:focus {
+            border-color: var(--tpui-color-primary);
+        }
+        .tp-select-new__arrow {
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #8b96a3;
+            pointer-events: none;
+        }
+    </style>
+</head>
+<body>
+
+<div class="page-container">
+
+    <!-- Хедер -->
+    <div class="return-header">
+        <a class="return-header__back" href="javascript:history.back()">
+            ← Назад к заказам
+        </a>
+        <h1 class="return-header__title">Оформление возврата бракованного товара</h1>
+    </div>
+
+    <!-- Карточка товара -->
+    <div class="tp-box tp-box--white product-card">
+        <div class="product-card__image">
+            <img src="https://cdn1.technopark.ru/technopark/photos_resized/product/248_248/798001/1_798001.jpeg?timestamp=2025-07-28_16-01-54">
+        </div>
+        <div class="product-card__info">
+            <div class="product-card__name">Ноутбук Apple MacBook Air 15.3 М4 256 ГБ 2025 голубой MC7A4 </div>
+            <div class="product-card__price">Стоимость: 119990 ₽</div>
+            <div class="product-card__bonus">Бонус за возврат: <strong>35997 бонусов (30%)</strong></div>
+        </div>
+    </div>
+
+    <!-- Форма возврата -->
+    <form id="return-form">
+
+        <!-- Тип дефекта -->
+        <div class="tp-select-new" style="margin-bottom: 18px;">
+            <div class="tp-input-new__label">Тип дефекта</div>
+            <select required>
+                <option value="">Выберите тип дефекта</option>
+                <option value="mechanical">Механическое повреждение</option>
+                <option value="factory">Заводской брак</option>
+                <option value="not-working">Не включается</option>
+                <option value="mismatch">Не соответствует описанию</option>
+                <option value="other">Другое</option>
+            </select>
+            <div class="tp-select-new__arrow">▼</div>
+        </div>
+
+        <!-- Описание -->
+        <div class="tp-input-new">
+            <div class="tp-input-new__label">Описание брака</div>
+            <textarea class="tp-textarea__input" placeholder="Опишите проблему как можно подробнее..."></textarea>
+        </div>
+
+        <!-- Фото -->
+        <div class="tp-input-new__label" style="margin-bottom: 12px;">Фото брака (до 5 шт.)</div>
+        <div class="photo-upload" id="photo-upload">
+            <div class="photo-upload__item" onclick="document.getElementById('file-input').click()">
+                <span class="photo-upload__plus">+</span>
+            </div>
+            <input type="file" id="file-input" accept="image/*" multiple style="display:none" onchange="handleFiles(this.files)">
+        </div>
+
+        <!-- Способ возврата -->
+        <div class="tp-input-new__label" style="margin: 24px 0 12px;">Способ возврата</div>
+        <div class="tp-radio-group">
+            <label class="tp-radio" onclick="selectDelivery('pickup')">
+                <input type="radio" name="delivery" value="pickup" checked>
+                <span class="tp-radio__control"><span class="tp-radio__dot"></span></span>
+                <span class="tp-radio__label">Привезу сам в магазин</span>
+                <span class="tp-radio__extra">Бесплатно</span>
+            </label>
+            <label class="tp-radio" onclick="selectDelivery('courier')">
+                <input type="radio" name="delivery" value="courier">
+                <span class="tp-radio__control"><span class="tp-radio__dot"></span></span>
+                <span class="tp-radio__label">Вызов курьера</span>
+                <span class="tp-radio__extra">+500 ₽</span>
+            </label>
+        </div>
+
+        <!-- Адрес для курьера -->
+        <div class="delivery-address" id="courier-address">
+            <div class="tp-input-new">
+                <div class="tp-input-new__label">Адрес для курьера</div>
+                <div class="tp-input-new__box">
+                    <input type="text" class="tp-input-new__input" placeholder="Введите адрес">
+                </div>
+            </div>
+            <div class="tp-input-new">
+                <div class="tp-input-new__label">Дата и время</div>
+                <div class="tp-input-new__box">
+                    <input type="datetime-local" class="tp-input-new__input">
+                </div>
+            </div>
+        </div>
+
+        <!-- Контакты -->
+        <div class="tp-input-new">
+            <div class="tp-input-new__label">Контактный телефон</div>
+            <div class="tp-input-new__box">
+                <input type="tel" class="tp-input-new__input" value="+7 (999) 123-45-67">
+            </div>
+        </div>
+
+        <!-- Информация о бонусах -->
+        <div class="bonus-info">
+            <div class="tp-input-new__label" style="color: #8b96a3;">Вы получите</div>
+            <div class="bonus-info__amount"><span>35997 бонусов</span> (30%)</div>
+            <div style="font-size: 14px; color: #8b96a3;">После проверки товара бонусы будут зачислены на ваш бонусный счёт в личный кабинет в течение 14 дней</div>
+        </div>
+
+        <!-- Согласие -->
+        <label class="tp-checkbox">
+            <input type="checkbox" required>
+            <span class="tp-checkbox__box"><span class="tp-checkbox__check">✓</span></span>
+            <span>Я согласен с <a href="#" style="color: var(--tpui-color-primary-light);">условиями возврата</a> и <a href="#" style="color: var(--tpui-color-primary-light);">политикой обработки персональных данных</a></span>
+        </label>
+
+        <!-- Кнопка -->
+        <button type="submit" class="tp-button-new tp-button-new--accent tp-button-new--block">
+            Оформить возврат
+        </button>
+
+        <div style="text-align: center; margin-top: 12px; color: #8b96a3; font-size: 14px;">
+            Вы будете перенаправлены на страницу подтверждения
+        </div>
+    </form>
+</div>
+
+<!-- Модальное окно подтверждения -->
+<div id="success-modal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,.8); z-index:100; align-items:center; justify-content:center;">
+    <div style="background:#1d242d; border-radius:16px; padding:36px; max-width:440px; text-align:center;">
+        <div style="font-size:48px; margin-bottom:16px;">✅</div>
+        <div style="font-size:20px; font-weight:500; margin-bottom:12px; color:#fff;">Возврат оформлен!</div>
+        <div style="color:#8b96a3; margin-bottom:24px;">
+            Номер обращения: <strong style="color:#fff;">RET-2026-0042</strong><br>
+            Ожидаемое начисление: <strong style="color:#31b7e3;">35997 бонусов</strong>
+        </div>
+        <button class="tp-button-new tp-button-new--primary tp-button-new--block" onclick="location.href='#'">
+            Вернуться к заказам
+        </button>
+    </div>
+</div>
+
+<script>
+    // Переключение способа доставки
+    function selectDelivery(type) {
+        document.getElementById('courier-address').classList.toggle('active', type === 'courier');
+    }
+
+    // Загрузка фото
+    function handleFiles(files) {
+        const container = document.getElementById('photo-upload');
+        for (let file of files) {
+            if (container.querySelectorAll('.has-image').length >= 5) break;
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const item = document.createElement('div');
+                item.className = 'photo-upload__item has-image';
+                item.innerHTML = `
+                    <img src="${e.target.result}" alt="">
+                    <button class="delete-btn" onclick="this.parentElement.remove()">×</button>
+                `;
+                container.appendChild(item);
+            };
+            reader.readAsDataURL(file);
+        }
+    }
+
+    // Обработка формы
+    document.getElementById('return-form').addEventListener('submit', function(e) {
+        e.preventDefault();
+        document.getElementById('success-modal').style.display = 'flex';
+    });
+</script>
+
+</body>
+</html>
